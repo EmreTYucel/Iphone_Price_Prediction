@@ -37,7 +37,7 @@ namespace _3_Web_UI_ASPNET.Controllers
             return View();
         }
 
-        // Login POST
+        // Login post
         [HttpPost]
         public async Task<IActionResult> Login(string username, string password)
         {
