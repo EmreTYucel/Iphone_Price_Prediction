@@ -30,9 +30,9 @@ BEGIN
 END $$;
 
 
--- ============================================================
+-- ===========================================================
 -- 1) Varsayılan herkese açık yetkileri kapatma
--- ============================================================
+-- ===========================================================
 -- Amaç: PUBLIC (herkes) hiçbir tabloyu, fonksiyonu veya prosedürü
 -- doğrudan kullanamasın. Yetkiler sadece rollerle verilsin.
 REVOKE ALL ON ALL TABLES IN SCHEMA public FROM PUBLIC;
