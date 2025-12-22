@@ -45,7 +45,7 @@ REVOKE ALL ON ALL PROCEDURES IN SCHEMA public FROM PUBLIC;
 -- 2) Admin yetkileri
 -- ============================================================
 -- Admin panelinde yapılacak işlemler:
--- - Segment/Model/Specs/Condition yönetimi
+-- - Segment/Model/Specs yönetimi
 -- - Tahmin kayıtlarını görme
 -- - Kullanıcı/Rol yönetimi
 -- Bu nedenle admin'e tam yetki veriyoruz.
