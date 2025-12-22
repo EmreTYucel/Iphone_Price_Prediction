@@ -1,0 +1,48 @@
+﻿@{
+    ViewData["Title"] = "Ana Sayfa";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var isLogged = ViewBag.IsLoggedIn??false;
+    var role = ViewBag.UserRole??"";
+    var user = ViewBag.Username??"";
+}
+<section class="text-center pt-5 animate-fade-in">
+    <div class="mb-4">
+        <span class="badge bg-primary px-3 py-2 rounded-pill mb-3"><i class="fas fa-microchip me-2"></i>Yapay Zeka Destekli</span>
+    </div>
+    <h1 class="display-4 fw-bold mb-4">İkinci El iPhone <span style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Fiyat Tahmini</span></h1>
+    <p class="lead text-secondary mb-5">Makine öğrenmesi algoritmaları ile ikinci el iPhone'unuzun güncel piyasa değerini anında öğrenin. Doğru fiyatla alın, doğru fiyatla satın.</p>
+    <div class="d-flex gap-3 justify-content-center mb-4">
+        <a asp-controller="Prediction" asp-action="Create" class="btn btn-primary-custom btn-lg"><i class="fas fa-calculator me-2"></i>Fiyat Tahmin Et</a>
+        @if (isLogged)
+        {
+            <a asp-controller="History" asp-action="List" class="btn btn-outline-custom btn-lg"><i class="fas fa-history me-2"></i>Geçmişi Gör</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-outline-custom btn-lg"><i class="fas fa-user-plus me-2"></i>Üye Ol</a>
+        }
+    </div>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card-dark p-4 h-100">
+                <div class="mb-3"><span class="stat-icon" style="background: linear-gradient(135deg, #667eea, #764ba2);"><i class="fas fa-brain text-white"></i></span></div>
+                <h4 class="fw-bold mb-3">Yapay Zeka Modeli</h4>
+                <p class="text-secondary mb-0">En güncel makine öğrenmesi algoritmasıyla, doğru tahminler!</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-dark p-4 h-100">
+                <div class="mb-3"><span class="stat-icon" style="background: linear-gradient(135deg, #00c896, #00a67d);"><i class="fas fa-bolt text-white"></i></span></div>
+                <h4 class="fw-bold mb-3">Anında Sonuç</h4>
+                <p class="text-secondary mb-0">API ile ML modelinden saniyeler içinde sonuç alın.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-dark p-4 h-100">
+                <div class="mb-3"><span class="stat-icon" style="background: linear-gradient(135deg, #ff6b6b, #ee5a5a);"><i class="fas fa-chart-line text-white"></i></span></div>
+                <h4 class="fw-bold mb-3">Güncel Veriler</h4>
+                <p class="text-secondary mb-0">Sürekli veriyle güçlenen modelle piyasa daima elinizde.</p>
+            </div>
+        </div>
+    </div>
+</section>

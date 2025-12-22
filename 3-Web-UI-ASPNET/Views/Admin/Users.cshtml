@@ -1,0 +1,64 @@
+@{
+    ViewData["Title"] = "Kullanıcı Listesi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var users = ViewBag.Users as List<dynamic>;
+}
+<div class="row animate-fade-in">
+    <div class="col-12">
+        <div class="card-dark p-4 mb-4">
+            <h2 class="fw-bold mb-3"><i class="fas fa-users me-2"></i> Kullanıcı Listesi</h2>
+
+            <table class="table table-dark-custom">
+                <thead>
+                    <tr><th>#</th><th>Kullanıcı Adı</th><th>E-posta</th><th>Kayıt Tarihi</th></tr>
+                </thead>
+                <tbody id="usersTableBody">
+                @if (users != null && users.Count > 0)
+                {
+                    foreach(var u in users)
+                    {
+                        <tr>
+                            <td>@u.Id</td>
+                            <td><span class="fw-semibold"><i class="fa-solid fa-user-secret me-1"></i>@u.Username</span></td>
+                            <td>@u.Email</td>
+                            <td>@u.Tarih</td>
+                        </tr>
+                    }
+                }
+                else {
+                    <tr><td colspan="4" class="text-center text-secondary">Yükleniyor...</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    document.addEventListener('DOMContentLoaded', async function() {
+        try {
+            const response = await fetch('http://localhost:3000/api/users/masked');
+            if (response.ok) {
+                const users = await response.json();
+                const tbody = document.getElementById('usersTableBody');
+                if (users.length > 0) {
+                    tbody.innerHTML = users.map(u => `
+                        <tr>
+                            <td>${u.user_id}</td>
+                            <td><span class="fw-semibold"><i class="fa-solid fa-user-secret me-1"></i>${u.username_masked || u.username || '-'}</span></td>
+                            <td>${u.email_masked || u.user_email || '-'}</td>
+                            <td>${u.created_at ? u.created_at.substring(0, 10) : '-'}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-secondary">Kullanıcı yok</td></tr>';
+                }
+            }
+        } catch (error) {
+            console.error('Kullanıcı listesi yüklenemedi:', error);
+        }
+    });
+</script>
+}
+

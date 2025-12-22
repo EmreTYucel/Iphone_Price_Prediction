@@ -1,0 +1,33 @@
+1. Veri Analizi ve Hazırlama (EDA)
+Yönergedeki 20 puanlık "Detaylı EDA yapılmalı" maddesi için gereklidir:
+
+pandas: Veri setini (CSV) yüklemek ve tablolar üzerinde işlem yapmak için kullanılır.
+
+numpy: Matematiksel işlemler ve veri dizilerini (array) düzenlemek için gereklidir.
+
+matplotlib: Temel grafikler (fiyat dağılımı vb.) çizmek için kullanılır.
+
+seaborn: Isı haritaları (Correlation Heatmap) gibi gelişmiş görselleştirmeler için gereklidir.
+
+2. Model Eğitimi ve Tahmin
+Seçtiğiniz Gradient Boosting modelini çalıştırmak için gereklidir:
+
+scikit-learn: Gradient Boosting Regressor, Random Forest ve veri setini bölme (train-test split) işlemleri için ana kütüphanedir.
+
+joblib: Eğittiğiniz modeli .pkl dosyası olarak kaydetmek ve sunucuda geri yüklemek için kullanılır.
+
+3. SOA ve İletişim (gRPC)
+Python servisinin Node.js ile gRPC protokolü üzerinden konuşması için gereklidir:
+
+grpcio: gRPC sunucusunu çalıştırmak için temel kütüphanedir.
+
+grpcio-tools: .proto uzantılı dosyaları Python koduna dönüştürmek için kullanılan araçları içerir.
+
+4. Veri Toplama (Scraper)
+Yönergedeki "veri toplanmalı" maddesi için gereklidir:
+
+beautifulsoup4: Web sayfalarından veri kazımak (web scraping) için kullanılır.
+
+requests: Web sayfalarına istek göndermek için gereklidir.
+
+selenium: (Opsiyonel) Dinamik (JavaScript ile yüklenen) sayfaları kazımak gerekirse kullanılır.

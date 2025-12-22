@@ -1,0 +1,119 @@
+@{
+    ViewData["Title"] = "Fiyat Tahmini";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-8">
+        <div class="card-dark p-4 p-lg-5">
+            <h2 class="fw-bold mb-4"><i class="fas fa-calculator me-2"></i> Fiyat Tahmini</h2>
+            <form asp-action="Create" method="post" id="predictionForm">
+                <div class="mb-3">
+                    <label class="form-label">Model & Özellikler</label>
+                    <select class="form-select form-select-dark" id="specsSelect" name="specs_id" required>
+                        <option value="">Model ve özellikler seçin...</option>
+                    </select>
+                    <small class="text-secondary">Model, RAM, Hafıza, Kamera ve diğer özellikleri seçin</small>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Cihaz Durumu</label>
+                    <select class="form-select form-select-dark" id="conditionSelect" name="condition_id" required>
+                        <option value="">Durum seçin...</option>
+                    </select>
+                </div>
+                <div class="d-grid gap-2 mb-2">
+                    <button type="submit" class="btn btn-primary-custom btn-lg" id="submitBtn">
+                        <i class="fas fa-magic me-2"></i> Fiyat Tahmin Et
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    let specsCatalog = [];
+    let conditionsCatalog = [];
+
+    async function loadSpecsCatalog() {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/api/specs-catalog');
+            specsCatalog = await response.json();
+            const select = document.getElementById('specsSelect');
+            select.innerHTML = '<option value="">Model ve özellikler seçin...</option>';
+            specsCatalog.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.specs_id;
+                
+                let text = item.model_name;
+                // Eğer model isminin içinde zaten segment adı geçmiyorsa ve segment 'Base' değilse ekle
+                if (item.segment_name && item.segment_name !== 'Base' && !text.toLowerCase().includes(item.segment_name.toLowerCase())) {
+                    text += ' ' + item.segment_name;
+                }
+
+                const label = `${text} - ${item.hafiza_gb}GB / ${item.ram_gb}GB RAM / ${item.kamera_mp}MP / ${item.ekran_boyutu}" / ${item.batarya_mah}mAh`;
+                option.textContent = label;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Specs katalog yüklenemedi:', error);
+            // Demo veriler
+            const select = document.getElementById('specsSelect');
+            select.innerHTML = `
+                <option value="">Model ve özellikler seçin...</option>
+                <option value="1">iPhone 14 Pro - 128GB / 6GB RAM / 48MP / 6.1" / 3200mAh</option>
+                <option value="2">iPhone 15 Pro Max - 256GB / 8GB RAM / 48MP / 6.7" / 4422mAh</option>
+                <option value="3">iPhone 13 - 128GB / 4GB RAM / 12MP / 6.1" / 3240mAh</option>
+            `;
+        }
+    }
+
+    async function loadConditionsCatalog() {
+        try {
+            const response = await fetch('http://127.0.0.1:3000/api/conditions-catalog');
+            conditionsCatalog = await response.json();
+            const select = document.getElementById('conditionSelect');
+            select.innerHTML = '<option value="">Durum seçin...</option>';
+            conditionsCatalog.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.condition_id;
+                option.textContent = item.condition_name;
+                select.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Conditions katalog yüklenemedi:', error);
+            // Demo veriler
+            const select = document.getElementById('conditionSelect');
+            select.innerHTML = `
+                <option value="">Durum seçin...</option>
+                <option value="1">Mükemmel</option>
+                <option value="2">Çok İyi</option>
+                <option value="3">İyi</option>
+                <option value="4">Orta</option>
+                <option value="5">Kötü</option>
+            `;
+        }
+    }
+
+    document.getElementById('predictionForm').addEventListener('submit', function(e) {
+        const specsId = document.getElementById('specsSelect').value;
+        const conditionId = document.getElementById('conditionSelect').value;
+        
+        if (!specsId || !conditionId) {
+            e.preventDefault();
+            alert('Lütfen model ve durum seçin!');
+            return false;
+        }
+
+        const btn = document.getElementById('submitBtn');
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Hesaplanıyor...';
+        btn.disabled = true;
+    });
+
+    // Sayfa yüklendiğinde katalogları yükle
+    document.addEventListener('DOMContentLoaded', function() {
+        loadSpecsCatalog();
+        loadConditionsCatalog();
+    });
+</script>
+}

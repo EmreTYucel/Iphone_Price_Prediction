@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Profil";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var role = ViewBag.UserRole ?? "User";
+    var username = ViewBag.Username ?? "-";
+}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-8">
+        <div class="card-dark p-4 p-lg-5 mb-4">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <div class="mb-3">
+                        <span class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 120px; height: 120px; background: linear-gradient(135deg, #667eea, #764ba2);">
+                            <i class="fas fa-user fs-1 text-white"></i>
+                        </span>
+                    </div>
+                    <h4 class="fw-bold mb-1">@username</h4>
+                    <span class="badge bg-primary">@role</span>
+                </div>
+                <div class="col-md-8">
+                    <h5 class="fw-bold mb-4">Profil Bilgileri</h5>
+                    <div class="row g-3">
+                        <div class="col-6"><span class="text-secondary small mb-1">Kullanıcı Adı</span><p class="fw-semibold">@username</p></div>
+                        <div class="col-6"><span class="text-secondary small mb-1">Rol</span><p class="fw-semibold text-info">@role</p></div>
+                        <div class="col-6"><span class="text-secondary small mb-1">Şifre</span><p class="fw-semibold">******</p></div>
+                        <div class="col-6"><span class="text-secondary small mb-1">Kayıt Tarihi</span><p class="fw-semibold">19.12.2025</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @if(role == "Admin"){
+        <div class="card-dark p-4 mb-4" style="border-left: 4px solid #ff6b6b;">
+            <h5 class="fw-bold mb-3"><i class="fas fa-shield-alt me-2" style="color:#ff6b6b;"></i> Admin Paneli</h5>
+            <p class="text-secondary mb-3">Tüm kullanıcıları ve tahmin geçmişini yönetebilirsiniz.</p>
+            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-outline-custom"><i class="fas fa-tachometer-alt me-2"></i>Admin Dashboard</a>
+        </div>}
+        else {
+        <div class="card-dark p-4 mb-4" style="border-left: 4px solid #00c896;">
+            <h5 class="fw-bold mb-3"><i class="fas fa-user me-2" style="color:#00c896;"></i>Kullanıcı İşlemleri</h5>
+            <p class="text-secondary mb-3">Fiyat tahmini yapabilir ve geçmişini görebilirsin.</p>
+            <a asp-controller="Prediction" asp-action="Create" class="btn btn-primary-custom"><i class="fas fa-calculator me-2"></i>Fiyat Tahmini</a>
+            <a asp-controller="History" asp-action="List" class="btn btn-outline-custom ms-2"><i class="fas fa-history me-2"></i>Geçmişim</a>
+        </div>}
+    </div>
+</div>

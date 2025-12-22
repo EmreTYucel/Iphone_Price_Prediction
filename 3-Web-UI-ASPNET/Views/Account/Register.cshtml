@@ -1,0 +1,48 @@
+@{
+    ViewData["Title"] = "Kayıt Ol";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="row justify-content-center animate-fade-in" style="min-height: 70vh; align-items:center;">
+    <div class="col-md-6 col-lg-5">
+        <div class="card-dark p-4 p-lg-5 mt-5">
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <span class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 75px; height: 75px; background: linear-gradient(135deg, #00c896, #00a67d);">
+                        <i class="fas fa-user-plus fs-3 text-white"></i>
+                    </span>
+                </div>
+                <h3 class="fw-bold mb-1">Kayıt Ol</h3>
+                <p class="text-secondary">Yeni hesap oluşturun</p>
+            </div>
+            <form asp-action="Register" method="post">
+                <div class="mb-3">
+                    <label class="form-label">Kullanıcı Adı</label>
+                    <input type="text" class="form-control form-control-dark" name="username" required minlength="3" autocomplete="username">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">E-posta</label>
+                    <input type="email" class="form-control form-control-dark" name="email" required autocomplete="email">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Şifre</label>
+                    <input type="password" class="form-control form-control-dark" name="password" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Şifre Tekrar</label>
+                    <input type="password" class="form-control form-control-dark" name="password_confirm" required minlength="6" autocomplete="new-password">
+                </div>
+                <div class="d-grid gap-2 mb-4">
+                    <button type="submit" class="btn btn-primary-custom btn-lg">
+                        <i class="fas fa-user-plus me-2"></i>Kayıt Ol
+                    </button>
+                </div>
+                <div class="text-center">
+                    <p class="text-secondary mb-2">Zaten hesabınız var mı?</p>
+                    <a asp-action="Login" class="btn btn-outline-custom btn-sm">
+                        <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

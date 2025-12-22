@@ -1,0 +1,285 @@
+﻿@* Modern ana layout, tüm sayfalarda kullanılacak karanlık tema *@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - iPhone Fiyat Tahmin</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/css/site.css" asp-append-version="true" />
+    <style>
+        body {
+            background: #111;
+            color: #ececec;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .navbar {
+            background: #1a1a1a;
+            border-bottom: 1px solid #333;
+        }
+
+            .navbar .navbar-brand {
+                font-weight: 700;
+                color: #946af8 !important;
+                letter-spacing: 0.5px;
+            }
+
+            .navbar .nav-link, .user-badge {
+                color: #bcbcd1 !important;
+                font-weight: 500;
+            }
+
+        .nav-link.active {
+            color: #fff !important;
+            background: #2a2166 !important;
+        }
+
+        .navbar .user-badge {
+            background: #24243d;
+            border-radius: 18px;
+            padding: 0.3rem 1rem;
+            margin-left: 0.5rem;
+        }
+
+            .navbar .user-badge .role-tag {
+                background: #684dc8;
+                color: #fff;
+                border-radius: 8px;
+                padding: 0.1rem 0.6rem;
+                font-size: 0.85em;
+                font-weight: 600;
+            }
+
+        .main-content {
+            min-height: 85vh;
+            padding: 2rem 0 2rem 0;
+        }
+
+        .footer {
+            background: #181828;
+            color: #8686a3;
+            border-top: 1px solid #222;
+            padding: 1.3rem 0;
+            text-align: center;
+        }
+
+        /* Kart ve Form Stilleri */
+        .card-dark {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .form-control-dark {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #ececec;
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+        }
+
+            .form-control-dark:focus {
+                background: #1f1f1f;
+                border-color: #946af8;
+                color: #ececec;
+                box-shadow: 0 0 0 0.2rem rgba(148, 106, 248, 0.25);
+            }
+
+        .form-select-dark {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #ececec;
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+        }
+
+            .form-select-dark:focus {
+                background: #1f1f1f;
+                border-color: #946af8;
+                color: #ececec;
+                box-shadow: 0 0 0 0.2rem rgba(148, 106, 248, 0.25);
+            }
+
+        /* Buton Stilleri */
+        .btn-primary-custom {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: #fff;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .btn-primary-custom:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+                color: #fff;
+            }
+
+        .btn-outline-custom {
+            background: transparent;
+            border: 2px solid #333;
+            color: #ececec;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+            .btn-outline-custom:hover {
+                background: #1a1a1a;
+                border-color: #946af8;
+                color: #946af8;
+            }
+
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* TABLO RENK DÜZELTMESİ (GÜNCELLENDİ) */
+        .table-dark-custom {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+            /* Başlıklar (Header) - ARTIK BEYAZ */
+            .table-dark-custom thead th {
+                background-color: #252525 !important;
+                color: #ffffff !important; /* İsteğin üzerine BEYAZ yapıldı */
+                border-bottom: 2px solid #444;
+                padding: 1rem;
+                font-weight: 700;
+            }
+
+            /* Satırlar (Rows) - Koyu arka plan ve beyaz yazı zorunlu kılındı */
+            .table-dark-custom tbody tr {
+                background-color: #1a1a1a !important;
+            }
+
+            .table-dark-custom tbody td {
+                background-color: #1a1a1a !important; /* Satır arka planı koyu */
+                color: #ececec !important; /* Satır yazısı açık gri/beyaz */
+                padding: 1rem;
+                border-top: 1px solid #333;
+                border-bottom: 1px solid #333;
+                vertical-align: middle;
+            }
+
+            .table-dark-custom tbody tr:hover td {
+                background-color: #222 !important;
+                transition: 0.2s;
+            }
+
+        /* responsive media query for mobile */
+        @@media (max-width: 600px) {
+            .main-content {
+                padding: .6rem 0;
+            }
+        }
+    </style>
+    @RenderSection("head", required: false)
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <i class="fab fa-apple"></i> iPhone Fiyat Tahmin
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" ? "active" : "")" asp-controller="Home" asp-action="Index">
+                                <i class="fas fa-home"></i> Ana Sayfa
+                            </a>
+                        </li>
+
+                        @if (ViewBag.IsLoggedIn == true)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Prediction" ? "active" : "")" asp-controller="Prediction" asp-action="Create">
+                                <i class="fa-solid fa-calculator"></i> Fiyat Tahmin
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "History" ? "active" : "")" asp-controller="History" asp-action="List">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Geçmiş
+                            </a>
+                        </li>
+                    }
+
+                        @if(ViewBag.UserRole == "Admin")
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Admin" ? "active" : "")" asp-controller="Admin" asp-action="Dashboard">
+                                <i class="fa-solid fa-user-shield"></i> Admin Panel
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "SystemLogs" ? "active" : "")" asp-controller="SystemLogs" asp-action="Index">
+                                <i class="fa-solid fa-file-waveform"></i> Loglar
+                            </a>
+                        </li>
+                    }
+                    </ul>
+
+                    <div class="d-flex align-items-center gap-2">
+                        @if (ViewBag.IsLoggedIn == true)
+                    {
+                        @await Html.PartialAsync("_NotificationPanel")
+                    }
+
+                        @if(ViewBag.IsLoggedIn == true)
+                    {
+                        <span class="user-badge">
+                            <i class="fas fa-user-circle"></i>
+                            @ViewBag.Username <span class="role-tag">@ViewBag.UserRole</span>
+                        </span>
+                        <a class="btn btn-outline-light btn-sm ms-2" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-sign-out-alt"></i></a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-outline-light btn-sm" asp-controller="Account" asp-action="Login"><i class="fa-solid fa-sign-in-alt me-1"></i> Giriş</a>
+                        <a class="btn btn-outline-light btn-sm ms-1" asp-controller="Account" asp-action="Register"><i class="fa-solid fa-user-plus me-1"></i> Kayıt Ol</a>
+                    }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main class="main-content container">
+        @RenderBody()
+    </main>
+    <footer class="footer">
+        <div class="container">
+            &copy; @DateTime.Now.Year - Yapay Zeka Destekli Fiyat Tahmin Sistemi
+        </div>
+    </footer>
+    <script src="/lib/jquery/dist/jquery.min.js"></script>
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/site.js" asp-append-version="true"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

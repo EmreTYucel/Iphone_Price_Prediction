@@ -1,0 +1,33 @@
+@{
+    ViewData["Title"] = "Tahmin Geçmişi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var history = ViewBag.History as List<dynamic>;
+    var user = ViewBag.Username;
+}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-8">
+        <div class="card-dark p-4 p-lg-5 mb-4">
+            <h2 class="fw-bold mb-3"><i class="fas fa-history me-2"></i> Tahmin Geçmişi (@user)</h2>
+            <table class="table table-dark-custom">
+                <thead>
+                    <tr><th>Tarih</th><th>Cihaz</th><th>Fiyat (₺)</th></tr>
+                </thead>
+                <tbody>
+                @if(history != null && history.Count > 0)
+                {
+                    foreach(var item in history)
+                    {
+                        <tr>
+                            <td>@item.Tarih</td>
+                            <td>@item.Cihaz</td>
+                            <td>@item.Fiyat</td>
+                        </tr>
+                    }
+                } else {
+                    <tr><td colspan="3" class="text-center text-secondary">Geçmiş yok</td></tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

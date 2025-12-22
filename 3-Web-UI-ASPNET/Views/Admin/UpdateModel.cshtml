@@ -1,0 +1,679 @@
+@{
+    ViewData["Title"] = "Model & Sistem Yönetimi";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="animate-fade-in">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="fw-bold mb-1">
+                <i class="fas fa-cogs me-3" style="color: #667eea;"></i>
+                Sistem Yönetimi
+            </h1>
+            <p class="text-secondary mb-0">Modeller, Özellikler ve Durumlar</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a asp-action="Dashboard" class="btn btn-outline-custom">
+                <i class="fas fa-arrow-left me-2"></i>Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-pills mb-4" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="pills-models-tab" data-bs-toggle="pill" data-bs-target="#pills-models" type="button" role="tab">Modeller</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-specs-tab" data-bs-toggle="pill" data-bs-target="#pills-specs" type="button" role="tab">Özellikler (Specs)</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="pills-conditions-tab" data-bs-toggle="pill" data-bs-target="#pills-conditions" type="button" role="tab">Durumlar</button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="pills-tabContent">
+        
+        <!-- MODELS TAB -->
+        <div class="tab-pane fade show active" id="pills-models" role="tabpanel">
+            <div class="card-dark p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                     <h5 class="fw-bold mb-0"><i class="fab fa-apple me-2" style="color: #00c896;"></i> Modeller</h5>
+                     <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addModelModal">
+                        <i class="fas fa-plus me-2"></i>Model Ekle
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark-custom mb-0">
+                        <thead><tr><th>ID</th><th>Model Adı</th><th>Segment</th><th>Çıkış Yılı</th><th>İşlem</th></tr></thead>
+                        <tbody id="modelsTable">
+                            <tr><td colspan="5" class="text-center py-4 text-secondary"><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SPECS TAB -->
+        <div class="tab-pane fade" id="pills-specs" role="tabpanel">
+            <div class="card-dark p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                     <h5 class="fw-bold mb-0"><i class="fas fa-microchip me-2" style="color: #ff6b6b;"></i> Özellikler</h5>
+                     <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addSpecsModal">
+                        <i class="fas fa-plus me-2"></i>Specs Ekle
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-dark-custom mb-0">
+                        <thead><tr><th>ID</th><th>Model</th><th>RAM</th><th>Hafıza</th><th>Kamera</th><th>Ekran</th><th>Batarya</th><th>İşlem</th></tr></thead>
+                        <tbody id="specsTable">
+                            <tr><td colspan="8" class="text-center py-4 text-secondary"><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONDITIONS TAB -->
+        <div class="tab-pane fade" id="pills-conditions" role="tabpanel">
+            <div class="card-dark p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                     <h5 class="fw-bold mb-0"><i class="fas fa-star me-2" style="color: #fbbf24;"></i> Cihaz Durumları</h5>
+                     <button class="btn btn-primary-custom btn-sm" data-bs-toggle="modal" data-bs-target="#addConditionModal">
+                        <i class="fas fa-plus me-2"></i>Durum Ekle
+                    </button>
+                </div>
+                 <div class="alert alert-info py-2 small"><i class="fas fa-info-circle me-1"></i> Durumlar veritabanında katalog olarak tutulur. Kullanıcılar tahmin yaparken bu durumları seçer.</div>
+                <div class="table-responsive">
+                    <table class="table table-dark-custom mb-0">
+                        <thead><tr><th>ID</th><th>Durum Adı</th><th>İşlem</th></tr></thead>
+                        <tbody id="conditionsTable">
+                            <tr><td colspan="3" class="text-center py-4 text-secondary"><i class="fas fa-spinner fa-spin"></i> Yükleniyor...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<!-- Add Model Modal -->
+<div class="modal fade" id="addModelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Yeni Model Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addModelForm">
+                    <div class="mb-3">
+                        <label class="form-label">Model Adı</label>
+                        <input type="text" class="form-control form-control-dark" name="model_name" placeholder="iPhone 17" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Segment</label>
+                        <select class="form-select form-select-dark" name="segment_name" id="modelSegmentSelect" required>
+                             <!-- JS ile dolacak -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Çıkış Yılı</label>
+                        <input type="number" class="form-control form-control-dark" name="release_year" value="2025" min="2007" max="2100" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary-custom" onclick="addModel()">Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Model Modal -->
+<div class="modal fade" id="editModelModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Model Düzenle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editModelForm">
+                    <input type="hidden" name="model_id" id="editModelId">
+                    <div class="mb-3">
+                        <label class="form-label">Model Adı</label>
+                        <input type="text" class="form-control form-control-dark" name="model_name" id="editModelName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Segment</label>
+                        <select class="form-select form-select-dark" name="segment_name" id="editSegmentName" required>
+                             <!-- JS ile dolacak -->
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Çıkış Yılı</label>
+                        <input type="number" class="form-control form-control-dark" name="release_year" id="editReleaseYear" min="2007" max="2100" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary-custom" id="btnUpdateModel">Güncelle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Specs Modal -->
+<div class="modal fade" id="addSpecsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Yeni Specs Ekle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addSpecsForm">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label">Model</label>
+                            <select class="form-select form-select-dark" name="model_id" id="specsModelSelect" required>
+                                <option value="">Model seçin...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">RAM (GB)</label>
+                            <input type="number" class="form-control form-control-dark" name="ram_gb" value="6" min="1" max="32" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Hafıza (GB)</label>
+                            <input type="number" class="form-control form-control-dark" name="hafiza_gb" value="128" min="8" max="2048" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kamera (MP)</label>
+                            <input type="number" class="form-control form-control-dark" name="kamera_mp" value="48" min="1" max="200" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ekran (inç)</label>
+                            <input type="number" step="0.1" class="form-control form-control-dark" name="ekran_boyutu" value="6.1" min="3" max="8" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Batarya (mAh)</label>
+                            <input type="number" class="form-control form-control-dark" name="batarya_mah" value="3500" min="500" max="10000" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary-custom" onclick="addSpecs()">Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Specs Modal -->
+<div class="modal fade" id="editSpecsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">Specs Düzenle</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editSpecsForm">
+                    <input type="hidden" name="specs_id" id="editSpecsId">
+                    <div class="alert alert-secondary small py-2 mb-3">Model: <span id="editSpecsModelName" class="fw-bold"></span> (Model değiştirilemez, silip yenisini ekleyin)</div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">RAM (GB)</label>
+                            <input type="number" class="form-control form-control-dark" name="ram_gb" id="editRamGb" min="1" max="32" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Hafıza (GB)</label>
+                            <input type="number" class="form-control form-control-dark" name="hafiza_gb" id="editHafizaGb" min="8" max="2048" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kamera (MP)</label>
+                            <input type="number" class="form-control form-control-dark" name="kamera_mp" id="editKameraMp" min="1" max="200" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Ekran (inç)</label>
+                            <input type="number" step="0.1" class="form-control form-control-dark" name="ekran_boyutu" id="editEkranBoyutu" min="3" max="8" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Batarya (mAh)</label>
+                            <input type="number" class="form-control form-control-dark" name="batarya_mah" id="editBataryaMah" min="500" max="10000" required>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-custom" data-bs-dismiss="modal">İptal</button>
+                <button type="button" class="btn btn-primary-custom" id="btnUpdateSpecs">Güncelle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Condition Modal -->
+<div class="modal fade" id="addConditionModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background: var(--bg-card); border: 1px solid var(--border-color);">
+            <div class="modal-header border-0">
+                 <h5 class="modal-title">Yeni Durum Ekle</h5>
+                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addConditionForm">
+                     <div class="mb-3">
+                         <label class="form-label">Durum Adı</label>
+                         <input type="text" class="form-control form-control-dark" name="condition_name" placeholder="Örn: Hurda" required>
+                     </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary-custom" onclick="addCondition()">Ekle</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    let models = [];
+    let segments = [];
+    let specs = [];
+    let conditions = [];
+    const API_URL = 'http://localhost:3000/api';
+
+    async function loadAllData() {
+        // Hepsini paralel yükle
+        await Promise.all([loadModels(), loadSpecs(), loadSegments(), loadConditions()]);
+        // Yüklendikten sonra select'leri doldur
+        populateSelects();
+    }
+
+    // Simple modal helper - no dispose, just show/hide
+    function showModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const modal = bootstrap.Modal.getOrCreateInstance(el);
+        modal.show();
+    }
+
+    function hideModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const modal = bootstrap.Modal.getInstance(el);
+        if (modal) modal.hide();
+    }
+
+    function getOrCreateModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return null;
+        return bootstrap.Modal.getOrCreateInstance(el);
+    }
+
+    function safeHideModal(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const modal = bootstrap.Modal.getInstance(el);
+        if (modal) modal.hide();
+    }
+
+    // ================= LOAD FUNCTIONS =================
+    async function loadModels() {
+        try {
+            models = await fetch(`${API_URL}/models`).then(r => r.json());
+            const tbody = document.getElementById('modelsTable');
+            if (models && models.length > 0) {
+                 tbody.innerHTML = models.map(m => `
+                    <tr>
+                        <td>${m.model_id}</td>
+                        <td><i class="fab fa-apple me-2 text-secondary"></i>${m.model_name}</td>
+                        <td><span class="badge bg-primary">${m.segment_name}</span></td>
+                        <td>${m.release_year}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-custom me-1" onclick="openEditModel(${m.model_id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteModel(${m.model_id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`).join('');
+            } else {
+                 tbody.innerHTML = '<tr><td colspan="5" class="text-center text-secondary">Veri yok</td></tr>';
+            }
+        } catch(e) { console.error('Models load error', e); }
+    }
+
+    async function loadSpecs() {
+        try {
+            specs = await fetch(`${API_URL}/specs`).then(r => r.json());
+            const tbody = document.getElementById('specsTable');
+            if (specs && specs.length > 0) {
+                 tbody.innerHTML = specs.map(s => {
+                    // Segment adı zaten model adının içindeyse tekrar ekleme
+                    const displayName = s.model_name.includes(s.segment_name) 
+                        ? s.model_name 
+                        : `${s.model_name} ${s.segment_name}`;
+                    
+                    return `
+                    <tr>
+                        <td>${s.specs_id}</td>
+                        <td>${displayName}</td>
+                        <td>${s.ram_gb} GB</td>
+                        <td>${s.hafiza_gb} GB</td>
+                        <td>${s.kamera_mp} MP</td>
+                        <td>${s.ekran_boyutu}"</td>
+                        <td>${s.batarya_mah} mAh</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-custom me-1" onclick="openEditSpecs(${s.specs_id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteSpecs(${s.specs_id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>`;
+                }).join('');
+            } else {
+                 tbody.innerHTML = '<tr><td colspan="8" class="text-center text-secondary">Veri yok</td></tr>';
+            }
+        } catch(e) { console.error('Specs load error', e); }
+    }
+    
+    async function loadSegments() {
+         try {
+            // Segment listesini (UI'da olmasa bile) dropdown için arka planda çekiyoruz
+            segments = await fetch(`${API_URL}/segments-catalog`).then(r => r.json());
+        } catch(e) { console.error('Segments load error', e); }
+    }
+
+    async function loadConditions() {
+         try {
+            conditions = await fetch(`${API_URL}/conditions-catalog`).then(r => r.json());
+            const tbody = document.getElementById('conditionsTable');
+            if(conditions && conditions.length > 0) {
+                 tbody.innerHTML = conditions.map(c => `
+                    <tr>
+                        <td>${c.condition_id}</td>
+                        <td>${c.condition_name}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteCondition(${c.condition_id})"><i class="fas fa-trash"></i> Sil</button>
+                        </td>
+                    </tr>`).join('');
+            } else {
+                 tbody.innerHTML = '<tr><td colspan="3" class="text-center text-secondary">Veri yok</td></tr>';
+            }
+        } catch(e) { console.error('Conditions load error', e); }
+    }
+
+    function populateSelects() {
+        // Populate Model Select (for Specs)
+        const modelSelect = document.getElementById('specsModelSelect');
+        const currentModelVal = modelSelect.value;
+        if(models && models.length > 0) {
+            modelSelect.innerHTML = '<option value="">Model seçin...</option>' + 
+                models.map(m => `<option value="${m.model_id}">${m.model_name} ${m.segment_name} (${m.release_year})</option>`).join('');
+            if(currentModelVal) modelSelect.value = currentModelVal;
+        }
+
+        // Populate Segment Selects (Add & Edit Model)
+        if(segments && segments.length > 0) {
+            const segOpts = segments.map(s => `<option value="${s.segment_name}">${s.segment_name}</option>`).join('');
+            if(document.getElementById('modelSegmentSelect'))
+                document.getElementById('modelSegmentSelect').innerHTML = segOpts;
+            if(document.getElementById('editSegmentName'))
+                document.getElementById('editSegmentName').innerHTML = segOpts;
+        }
+    }
+
+    // ================= ACTIONS =================
+    
+    // --- MODELS ---
+    async function addModel() {
+        const formData = new FormData(document.getElementById('addModelForm'));
+        try {
+            await fetch(`${API_URL}/models`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(formData))
+            });
+            bootstrap.Modal.getInstance(document.getElementById('addModelModal')).hide();
+            document.getElementById('addModelForm').reset();
+            loadModels();
+        } catch (e) { alert('Hata: ' + e.message); }
+    }
+
+    async function updateModel() {
+        const id = document.getElementById('editModelId').value;
+        try {
+             const res = await fetch(`${API_URL}/models/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model_name: document.getElementById('editModelName').value,
+                    segment_name: document.getElementById('editSegmentName').value,
+                    release_year: parseInt(document.getElementById('editReleaseYear').value)
+                })
+            });
+
+            if (!res.ok) throw new Error('Güncelleme başarısız');
+            
+            bootstrap.Modal.getInstance(document.getElementById('editModelModal')).hide();
+            loadModels();
+        } catch(e) { alert('Hata: ' + e.message); }
+    }
+
+    async function deleteModel(id) {
+        if (!confirm('Silmek istediğinize emin misiniz?')) return;
+        await fetch(`${API_URL}/models/${id}`, { method: 'DELETE' });
+        loadModels();
+    }
+
+    // --- SPECS ---
+    async function addSpecs() {
+        const formData = new FormData(document.getElementById('addSpecsForm'));
+        const data = Object.fromEntries(formData);
+        // Convert types
+        data.model_id = parseInt(data.model_id);
+        data.ram_gb = parseInt(data.ram_gb);
+        data.hafiza_gb = parseInt(data.hafiza_gb);
+        data.kamera_mp = parseInt(data.kamera_mp);
+        data.batarya_mah = parseInt(data.batarya_mah);
+        data.ekran_boyutu = parseFloat(data.ekran_boyutu);
+
+        try {
+             await fetch(`${API_URL}/specs`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            bootstrap.Modal.getInstance(document.getElementById('addSpecsModal')).hide();
+            document.getElementById('addSpecsForm').reset();
+            loadSpecs();
+        } catch (e) { alert('Hata: ' + e.message); }
+    }
+
+    function openEditModel(id) {
+        // ID karşılaştırmasında tür farkını önlemek için == kullanıyoruz
+        const model = models.find(m => m.model_id == id);
+        if(!model) {
+            console.error('Model bulunamadı:', id, models);
+            // alert('Model verisi yüklenemedi, lütfen sayfayı yenileyiniz.'); 
+            return;
+        }
+        document.getElementById('editModelId').value = model.model_id;
+        document.getElementById('editModelName').value = model.model_name;
+        document.getElementById('editReleaseYear').value = model.release_year;
+        
+        const segSelect = document.getElementById('editSegmentName');
+        // Segment adını eşleştirmeyi dene
+        const segExists = Array.from(segSelect.options).some(o => o.value === model.segment_name);
+        if(segExists) {
+             segSelect.value = model.segment_name;
+        }
+        
+        getOrCreateModal('editModelModal').show();
+    }
+    
+    // ...
+
+    function openEditSpecs(id) {
+        // ID karşılaştırmasında tür farkını önlemek için == kullanıyoruz
+        const s = specs.find(x => x.specs_id == id);
+        if(!s) {
+            console.error('Specs bulunamadı:', id);
+            return;
+        }
+        
+        // Modal elementlerini kontrol et
+        const editSpecsId = document.getElementById('editSpecsId');
+        const editSpecsModelName = document.getElementById('editSpecsModelName');
+        const editRamGb = document.getElementById('editRamGb');
+        const editHafizaGb = document.getElementById('editHafizaGb');
+        const editKameraMp = document.getElementById('editKameraMp');
+        const editEkranBoyutu = document.getElementById('editEkranBoyutu');
+        const editBataryaMah = document.getElementById('editBataryaMah');
+         
+        // Kritik elementleri kontrol et (editSpecsModelName opsiyonel çünkü sadece bilgi amaçlı)
+        if (!editSpecsId || !editRamGb || !editHafizaGb || !editKameraMp || !editEkranBoyutu || !editBataryaMah) {
+            console.error('Modal elementleri bulunamadı:', {
+                editSpecsId, editRamGb, editHafizaGb, editKameraMp, editEkranBoyutu, editBataryaMah
+            });
+            alert('Bir hata oluştu. Lütfen sayfayı manuel olarak yenileyin (F5).');
+            return;
+        }
+        
+        editSpecsId.value = s.specs_id;
+        
+        // Model adını göster (varsa)
+        if (editSpecsModelName) {
+            const displayName = s.model_name.includes(s.segment_name) 
+                            ? s.model_name 
+                            : `${s.model_name} ${s.segment_name}`;
+            editSpecsModelName.innerText = displayName;
+        }
+        
+        editRamGb.value = s.ram_gb;
+        editHafizaGb.value = s.hafiza_gb;
+        editKameraMp.value = s.kamera_mp;
+        editEkranBoyutu.value = s.ekran_boyutu;
+        editBataryaMah.value = s.batarya_mah;
+        
+        // Modal'ı aç (dispose etme, instance'ı yeniden kullan)
+        const modalEl = document.getElementById('editSpecsModal');
+        if (modalEl) {
+            // Backdrop temizle (varsa)
+            document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+            document.body.classList.remove('modal-open');
+            document.body.style.removeProperty('overflow');
+            document.body.style.removeProperty('padding-right');
+            
+            // Modal instance al veya oluştur ve göster
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        }
+    }
+
+    async function updateSpecs() {
+         console.log('Update Specs Triggered');
+         const idVal = document.getElementById('editSpecsId').value;
+         
+         if(!idVal) { 
+             alert('Hata: Specs ID bulunamadı.'); 
+             return; 
+         }
+
+         const data = {
+             ram_gb: parseInt(document.getElementById('editRamGb').value) || 0,
+             hafiza_gb: parseInt(document.getElementById('editHafizaGb').value) || 0,
+             kamera_mp: parseInt(document.getElementById('editKameraMp').value) || 0,
+             ekran_boyutu: parseFloat(document.getElementById('editEkranBoyutu').value) || 0,
+             batarya_mah: parseInt(document.getElementById('editBataryaMah').value) || 0
+         };
+         
+         console.log('Sending Specs Data:', data);
+
+         try {
+             const btn = document.querySelector('#editSpecsModal #btnUpdateSpecs');
+             if(btn) {
+                btn.innerText = 'Güncelleniyor...';
+                btn.disabled = true;
+             }
+
+             const res = await fetch(`${API_URL}/specs/${idVal}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            
+            if(!res.ok) {
+                const errText = await res.text();
+                throw new Error(errText || 'Güncelleme başarısız');
+            }
+            
+            safeHideModal('editSpecsModal');
+            alert('Özellikler başarıyla güncellendi.');
+            await loadSpecs();
+         } catch(e) { 
+             console.error(e);
+             alert('Hata: ' + e.message); 
+         } finally {
+             const btn = document.querySelector('#editSpecsModal #btnUpdateSpecs');
+             if(btn) {
+                 btn.innerText = 'Güncelle';
+                 btn.disabled = false;
+             }
+         }
+    }
+
+    async function deleteSpecs(id) {
+         if (!confirm('Silmek istediğinize emin misiniz?')) return;
+         await fetch(`${API_URL}/specs/${id}`, { method: 'DELETE' });
+         loadSpecs();
+    }
+
+    // --- CONDITIONS ---
+    async function addCondition() {
+        const form = document.getElementById('addConditionForm');
+         const formData = new FormData(form);
+        try {
+            await fetch(`${API_URL}/conditions`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ condition_name: formData.get('condition_name') })
+            });
+            bootstrap.Modal.getInstance(document.getElementById('addConditionModal')).hide();
+             form.reset();
+            loadConditions();
+        } catch(e) { alert('Hata: ' + e.message); }
+    }
+
+    async function deleteCondition(id) {
+        if (!confirm('Bu durumu silmek istediğinize emin misiniz?')) return;
+        try {
+            const res = await fetch(`${API_URL}/conditions/${id}`, { method: 'DELETE' });
+            if(res.ok) {
+                loadConditions();
+            } else {
+                const data = await res.json();
+                alert('Silinemedi: ' + data.error);
+            }
+        } catch(e) { alert('Hata: ' + e.message); }
+    }
+
+    // Start
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM Loaded, initializing...');
+        loadAllData();
+        
+        const btnUpdateModel = document.getElementById('btnUpdateModel');
+        if(btnUpdateModel) btnUpdateModel.addEventListener('click', updateModel);
+
+        const btnUpdateSpecs = document.getElementById('btnUpdateSpecs');
+        if(btnUpdateSpecs) btnUpdateSpecs.addEventListener('click', updateSpecs);
+    });
+</script>
+}

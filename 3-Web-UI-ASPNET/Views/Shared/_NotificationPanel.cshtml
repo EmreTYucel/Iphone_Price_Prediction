@@ -1,0 +1,31 @@
+@* Basit PartialView örneği: Sistem mesajı & döviz kuru *@
+@{
+    var success = TempData["SuccessMessage"] as string;
+    var error = TempData["ErrorMessage"] as string;
+}
+@if (!string.IsNullOrEmpty(success)) {
+    <div class="alert alert-success py-1 px-3 mb-0" role="alert" style="font-size:0.96em;">
+        <i class="fa-solid fa-circle-check me-1"></i> @success
+    </div>
+}
+@if (!string.IsNullOrEmpty(error)) {
+    <div class="alert alert-danger py-1 px-3 mb-0" role="alert" style="font-size:0.96em;">
+        <i class="fa-solid fa-triangle-exclamation me-1"></i> @error
+    </div>
+}
+<span class="badge bg-dark text-light ms-2" id="usdRateInfo" style="font-size:0.97em; display:inline-block; min-width:80px;">
+    <i class="fa-solid fa-dollar-sign"></i> <span id="currencyRate">-</span>
+</span>
+<script>
+fetch('http://127.0.0.1:3000/api/exchange-rate')
+  .then(res=>res.json()).then(data=>{
+    // Gelen veri formatı: { usd_try: 34.50, ... }
+    const rate = data.usd_try || 34.50;
+    document.getElementById('currencyRate').innerText = Number(rate).toFixed(2) + ' ₺';
+  })
+  .catch(err=>{
+    console.error('Kur çekilemedi:', err);
+    document.getElementById('currencyRate').innerText = '34.50 ₺';
+  });
+</script>
+

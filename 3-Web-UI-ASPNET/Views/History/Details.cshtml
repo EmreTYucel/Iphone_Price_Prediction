@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Tahmin Detayı";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var detail = ViewBag.Detail;
+}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-7">
+        <div class="card-dark p-4 p-lg-5 mb-4">
+            <h2 class="fw-bold mb-4"><i class="fas fa-info-circle me-2"></i> Tahmin Detayı</h2>
+            <p><b>Cihaz:</b> @detail.Model<br/><b>Özellikler:</b> @detail.Specs<br/><b>Durum:</b> @detail.Status<br/><b>Fiyat:</b> <span class="fw-bold">@detail.Fiyat ₺</span><br/><b>Tarih:</b> @detail.Tarih</p>
+            <a asp-controller="History" asp-action="List" class="btn btn-outline-custom"><i class="fas fa-arrow-left me-2"></i>Geri Dön</a>
+        </div>
+    </div>
+</div>

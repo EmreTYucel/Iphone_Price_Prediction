@@ -1,0 +1,72 @@
+@{
+    ViewData["Title"] = "Tahmin Sonucu";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var price = TempData["PredictedPrice"] as string ?? "-";
+    var usdRate = TempData["UsdRate"] as string ?? "0";
+    var specsId = TempData["SpecsId"] as string ?? "";
+    var conditionId = TempData["ConditionId"] as string ?? "";
+}
+<div class="row justify-content-center animate-fade-in">
+    <div class="col-lg-7">
+        <div class="card-dark p-4 p-lg-5 mb-4 text-center">
+            <div class="mb-4">
+                <span class="rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 90px; height: 90px; background: linear-gradient(135deg, #00c896, #00a67d);"><i class="fas fa-check fs-1 text-white"></i></span>
+            </div>
+            <h2 class="fw-bold mb-2">Tahmin Tamamlandı!</h2>
+            <p class="text-secondary mb-4" id="deviceInfo">Yükleniyor...</p>
+            <h1 class="display-3 fw-bold mb-3" style="background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">@price ₺</h1>
+            <p class="text-secondary" id="usdInfo"></p>
+            <div class="d-flex gap-2 justify-content-center">
+                <a asp-controller="Prediction" asp-action="Create" class="btn btn-primary-custom"><i class="fas fa-redo me-2"></i>Yeni Tahmin</a>
+                <a asp-controller="History" asp-action="List" class="btn btn-outline-custom"><i class="fas fa-history me-2"></i>Geçmişi Gör</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+    const specsId = '@specsId';
+    const conditionId = '@conditionId';
+    const price = parseFloat('@price'.replace(',', '.'));
+    const usdRate = parseFloat('@usdRate'.replace(',', '.'));
+
+    async function loadResultDetails() {
+        try {
+            // Specs bilgisini al
+            if (specsId) {
+                const specsResponse = await fetch(`http://localhost:3000/api/specs/${specsId}`);
+                const specs = await specsResponse.json();
+                let modelText = specs.model_name;
+                if (specs.segment_name && specs.segment_name !== 'Base' && !modelText.toLowerCase().includes(specs.segment_name.toLowerCase())) {
+                    modelText += ' ' + specs.segment_name;
+                }
+                const specsText = `${modelText} - ${specs.hafiza_gb}GB / ${specs.ram_gb}GB RAM`;
+                document.getElementById('deviceInfo').innerHTML = `<b>${specsText}</b>`;
+            }
+
+            // Condition bilgisini al
+            if (conditionId) {
+                const conditionsResponse = await fetch('http://localhost:3000/api/conditions-catalog');
+                const conditions = await conditionsResponse.json();
+                const condition = conditions.find(c => c.condition_id == conditionId);
+                if (condition) {
+                    const currentText = document.getElementById('deviceInfo').innerHTML;
+                    document.getElementById('deviceInfo').innerHTML = currentText + ` <span class="badge bg-primary">${condition.condition_name}</span>`;
+                }
+            }
+
+            // USD bilgisi
+            if (usdRate > 0 && price > 0) {
+                const priceUsd = (price / usdRate).toFixed(2);
+                document.getElementById('usdInfo').textContent = `≈ $${priceUsd} (1 USD = ${usdRate.toFixed(2)} ₺)`;
+            }
+        } catch (error) {
+            console.error('Detaylar yüklenemedi:', error);
+            document.getElementById('deviceInfo').innerHTML = '<b>iPhone</b> <span class="badge bg-primary">İyi</span>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadResultDetails);
+</script>
+}

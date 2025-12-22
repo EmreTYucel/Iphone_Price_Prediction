@@ -1,0 +1,73 @@
+@{
+    ViewData["Title"] = "Giriş Yap";
+}
+
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5 col-lg-4">
+
+        <div class="text-center mb-4">
+            <h2 class="fw-bold" style="color: #946af8;">
+                <i class="fas fa-sign-in-alt me-2"></i>Giriş Yap
+            </h2>
+            <p style="color: #ccc;">Tahmin sistemine erişmek için oturum açın.</p>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+        <div class="alert alert-success alert-dismissible fade show animate-fade-in" role="alert">
+            <i class="fas fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+        }
+
+        @if (TempData["ErrorMessage"] != null)
+        {
+        <div class="alert alert-danger alert-dismissible fade show animate-fade-in" role="alert">
+            <i class="fas fa-exclamation-circle me-2"></i> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+        }
+
+        <div class="card card-dark shadow-lg animate-fade-in">
+            <div class="card-body p-4">
+                <form asp-action="Login" method="post">
+
+                    <div class="mb-3">
+                        <label class="form-label text-white">Kullanıcı Adı</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #252525; border-color: #333; color: #6c757d;">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" name="username" class="form-control form-control-dark" placeholder="Kullanıcı adınız" required />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-white">Şifre</label>
+                        <div class="input-group">
+                            <span class="input-group-text" style="background-color: #252525; border-color: #333; color: #6c757d;">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" name="password" class="form-control form-control-dark" placeholder="••••••" required />
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary-custom btn-lg">
+                            Giriş Yap
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+            <div class="card-footer text-center border-top border-secondary pt-3 pb-2" style="background: transparent;">
+                <p class="small mb-0" style="color: #ccc;">
+                    Hesabınız yok mu?
+                    <a asp-action="Register" class="text-decoration-none fw-bold" style="color: #946af8;">Kayıt Ol</a>
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
