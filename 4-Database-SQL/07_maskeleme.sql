@@ -12,9 +12,9 @@
 
 BEGIN;
 
--- ============================================================
+-- ===========================================================
 -- 0) Roller (DB role) oluşturma
--- ============================================================
+-- ===========================================================
 -- Not: Bu DB rollerini uygulama kullanıcılarıyla karıştırmayın.
 -- DB tarafında bağlantı yaparken admin bağlantıları app_admin ile,
 -- normal kullanıcı bağlantıları app_user ile yapılır.
