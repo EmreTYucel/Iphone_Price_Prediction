@@ -21,20 +21,37 @@ async function getUsdExchangeRate() {
         return response.data.rates.TRY;
     } catch (error) {
         console.log("Kur API'sine ulaşılamadı.");
-        return 34.50;
+        return 42.0;
     }
 }
 
-// SOAP PROTOKOLÜ (TCMB)
-async function verifyWithTCMBSoap() {
+// SOAP PROTOKOLÜ (Gerçek WSDL - Para Birimi Doğrulama)
+async function verifyCurrencyWithSoap(currencyCode = 'TRY') {
     return new Promise((resolve) => {
-        const url = 'https://www.tcmb.gov.tr/kurlar/today.xml';
+        // Bu servis uluslararası standartlara göre para birimi kontrolü yapar.
+        // Finansal sistemlerde (Veri Doğrulama) için kullanılır.
+        const url = 'http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?WSDL';
+
         soap.createClient(url, function (err, client) {
             if (err) {
-                console.log("SOAP Bağlantısı kuruldu (Simüle edildi).");
-                resolve("TCMB XML Servisi Bağlantısı Doğrulandı");
+                console.log("⚠️ SOAP Bağlantı Hatası:", err ? err.message : "Bilinmeyen Hata");
+                resolve("SOAP Servisi: Bağlantı Kurulamadı");
             } else {
-                resolve("TCMB SOAP/XML Protokolü Üzerinden Veri Alındı");
+                
+                client.CurrencyName({ sCurrencyISOCode: currencyCode }, function (err, result) {
+                    if (err) {
+                        console.log("⚠️ SOAP Fonksiyon Hatası:", err.message);
+                        resolve("SOAP: Fonksiyon Yanıt Vermedi");
+                    } else {
+                        
+                        const currencyName = result?.mCurrencyNameResult
+                            || result?.CurrencyNameResult
+                            || "Sonuç Bulunamadı";
+
+                        console.log(`✅ SOAP ile Para Birimi Doğrulandı: ${currencyCode} -> "${currencyName}"`);
+                        resolve(`Doğrulandı: ${currencyName}`);
+                    }
+                });
             }
         });
     });
@@ -559,11 +576,13 @@ app.get('/api/mask/username/:username', async (req, res) => {
 app.get('/api/exchange-rate', async (req, res) => {
     try {
         const rate = await getUsdExchangeRate();
-        const tcmbStatus = await verifyWithTCMBSoap();
+        // SOAP ile Para Birimi Doğrulama (Reference Data Check)
+        const currencyCheck = await verifyCurrencyWithSoap('TRY');
         res.json({
             usd_try: rate,
             source: 'exchangerate-api.com',
-            tcmb_status: tcmbStatus
+            // SOAP Servisinden gelen doğrulama sonucu
+            currency_check: currencyCheck // Örn: "Doğrulandı: Turkish Lira"
         });
     } catch (error) {
         res.status(500).json({ error: error.message });
